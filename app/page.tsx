@@ -2,74 +2,77 @@
 
 import { useState } from "react";
 import { moodPacks } from "@/lib/moodPacks";
-import { buildPrompt } from "@/lib/promptEngine";
 import { PRICING } from "@/lib/cost";
 import type { Quality } from "@/lib/cost";
 import type { RoomType } from "@/types";
-
-const ROOM_TYPES: { value: RoomType; label: string }[] = [
-  { value: "living_room", label: "Obývačka" },
-  { value: "bedroom", label: "Spálňa" },
-  { value: "kitchen", label: "Kuchyňa" },
-  { value: "dining_room", label: "Jedáleň" },
-  { value: "home_office", label: "Pracovňa" },
-  { value: "bathroom", label: "Kúpeľňa" },
-  { value: "kids_room", label: "Detská izba" },
-  { value: "hallway", label: "Predsieň" },
-  { value: "studio", label: "Garsónka" },
-];
-
-type RenderResult = {
-  inputUrl: string;
-  outputUrl: string;
-  seed: number;
-  costCents: number;
-};
+import { UploadZone } from "@/components/UploadZone";
+import { PhotoCard, type Photo } from "@/components/PhotoCard";
 
 export default function Home() {
   const [packId, setPackId] = useState<string>(moodPacks[0].id);
-  const [roomType, setRoomType] = useState<RoomType>("living_room");
-  const [note, setNote] = useState<string>("");
   const [quality, setQuality] = useState<Quality>("preview");
+  const [note, setNote] = useState<string>("");
+  const [photos, setPhotos] = useState<Photo[]>([]);
 
-  const [file, setFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [generating, setGenerating] = useState<boolean>(false);
-  const [result, setResult] = useState<RenderResult | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const anyBusy = photos.some((p) => p.status === "generating");
 
-  const pack = moodPacks.find((p) => p.id === packId) ?? moodPacks[0];
-  const { prompt } = buildPrompt({ moodPack: pack, roomType, userNote: note });
-
-  function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
-    const f = e.target.files?.[0] ?? null;
-    setFile(f);
-    setResult(null);
-    setError(null);
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
-    setPreviewUrl(f ? URL.createObjectURL(f) : null);
+  function addFiles(files: File[]) {
+    const imgs = files.filter((f) => f.type.startsWith("image/"));
+    const additions: Photo[] = imgs.map((f) => ({
+      id: crypto.randomUUID(),
+      file: f,
+      previewUrl: URL.createObjectURL(f),
+      roomType: "living_room" as RoomType,
+      status: "idle",
+      result: null,
+      error: null,
+    }));
+    setPhotos((prev) => [...prev, ...additions]);
   }
 
-  async function handleGenerate() {
-    if (!file) return;
-    setGenerating(true);
-    setError(null);
-    setResult(null);
+  function updatePhoto(id: string, patch: Partial<Photo>) {
+    setPhotos((prev) => prev.map((p) => (p.id === id ? { ...p, ...patch } : p)));
+  }
+
+  function removePhoto(id: string) {
+    setPhotos((prev) => {
+      const p = prev.find((x) => x.id === id);
+      if (p) URL.revokeObjectURL(p.previewUrl);
+      return prev.filter((x) => x.id !== id);
+    });
+  }
+
+  function handleRoomType(id: string, roomType: RoomType) {
+    updatePhoto(id, { roomType });
+  }
+
+  async function stagePhoto(photo: Photo) {
+    updatePhoto(photo.id, { status: "generating", error: null });
     try {
       const fd = new FormData();
-      fd.append("image", file);
+      fd.append("image", photo.file);
       fd.append("moodPackId", packId);
-      fd.append("roomType", roomType);
+      fd.append("roomType", photo.roomType);
       fd.append("note", note);
       fd.append("quality", quality);
       const res = await fetch("/api/render", { method: "POST", body: fd });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Render zlyhal.");
-      setResult(data as RenderResult);
+      updatePhoto(photo.id, { status: "done", result: data });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Render zlyhal.");
-    } finally {
-      setGenerating(false);
+      updatePhoto(photo.id, {
+        status: "error",
+        error: err instanceof Error ? err.message : "Render zlyhal.",
+      });
+    }
+  }
+
+  async function stageAll() {
+    // Sekvenčne — kvôli kontrole nákladov a záťaže.
+    for (const p of photos) {
+      if (p.status !== "done" && p.status !== "generating") {
+        await stagePhoto(p);
+      }
     }
   }
 
@@ -82,27 +85,21 @@ export default function Home() {
         </p>
       </header>
 
-      <section style={{ marginBottom: "var(--space-xl)", maxWidth: "520px" }}>
-        <h3 style={{ marginBottom: "var(--space-sm)" }}>1 · Nahraj fotku miestnosti</h3>
-        <input type="file" accept="image/*" onChange={handleFile} />
-        {previewUrl && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={previewUrl}
-            alt="Náhľad nahranej fotky"
-            style={{
-              display: "block",
-              marginTop: "var(--space-md)",
-              maxWidth: "100%",
-              borderRadius: "var(--radius)",
-              border: "1px solid var(--color-border)",
-            }}
-          />
+      <section style={{ marginBottom: "var(--space-xl)" }}>
+        <h3 style={{ marginBottom: "var(--space-sm)" }}>1 · Nahraj fotky bytu</h3>
+        <UploadZone onAdd={addFiles} />
+        {photos.length > 0 && (
+          <p className="muted" style={{ fontSize: "var(--font-size-sm)", marginTop: "var(--space-sm)" }}>
+            Nahraných fotiek: {photos.length}
+          </p>
         )}
       </section>
 
       <section style={{ marginBottom: "var(--space-xl)" }}>
-        <h3 style={{ marginBottom: "var(--space-sm)" }}>2 · Vyber štýl (mood pack)</h3>
+        <h3 style={{ marginBottom: "var(--space-sm)" }}>2 · Spoločný štýl pre celý byt</h3>
+        <p className="muted" style={{ fontSize: "var(--font-size-sm)", marginBottom: "var(--space-sm)" }}>
+          Jeden mood pack pre všetky fotky — aby byt pôsobil jednotne.
+        </p>
         <div
           style={{
             display: "grid",
@@ -121,21 +118,11 @@ export default function Home() {
                 style={{
                   textAlign: "left",
                   cursor: "pointer",
-                  borderColor: active
-                    ? "var(--color-primary)"
-                    : "var(--color-border)",
-                  boxShadow: active
-                    ? "0 0 0 3px var(--color-primary-subtle)"
-                    : "none",
+                  borderColor: active ? "var(--color-primary)" : "var(--color-border)",
+                  boxShadow: active ? "0 0 0 3px var(--color-primary-subtle)" : "none",
                 }}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    gap: "4px",
-                    marginBottom: "var(--space-sm)",
-                  }}
-                >
+                <div style={{ display: "flex", gap: "4px", marginBottom: "var(--space-sm)" }}>
                   {p.colors.map((c) => (
                     <span key={c} className="swatch" style={{ background: c }} />
                   ))}
@@ -151,38 +138,7 @@ export default function Home() {
       </section>
 
       <section style={{ marginBottom: "var(--space-xl)", maxWidth: "520px" }}>
-        <h3 style={{ marginBottom: "var(--space-sm)" }}>
-          3 · Typ miestnosti a poznámka
-        </h3>
-        <label className="field">
-          <span className="field__label">Typ miestnosti</span>
-          <select
-            className="select"
-            value={roomType}
-            onChange={(e) => setRoomType(e.target.value as RoomType)}
-          >
-            {ROOM_TYPES.map((r) => (
-              <option key={r.value} value={r.value}>
-                {r.label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="field">
-          <span className="field__label">
-            Voliteľná poznámka (napr. „viac zelene")
-          </span>
-          <textarea
-            className="textarea"
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            placeholder="viac zelene a kníh"
-          />
-        </label>
-      </section>
-
-      <section style={{ marginBottom: "var(--space-xl)", maxWidth: "520px" }}>
-        <h3 style={{ marginBottom: "var(--space-sm)" }}>4 · Kvalita a generovanie</h3>
+        <h3 style={{ marginBottom: "var(--space-sm)" }}>3 · Kvalita a poznámka</h3>
         <div style={{ display: "flex", gap: "var(--space-sm)", marginBottom: "var(--space-md)" }}>
           <button
             type="button"
@@ -199,104 +155,62 @@ export default function Home() {
             Finál (HD) · ~{PRICING.final.costCents} c
           </button>
         </div>
-        <button
-          type="button"
-          className="button button--primary"
-          onClick={handleGenerate}
-          disabled={!file || generating}
-        >
-          {generating ? "Zariaďujem priestor…" : "Zariadiť priestor"}
-        </button>
-        {!file && (
-          <p className="muted" style={{ fontSize: "var(--font-size-sm)", marginTop: "var(--space-sm)" }}>
-            Najprv nahraj fotku v kroku 1.
-          </p>
-        )}
+        <label className="field">
+          <span className="field__label">Voliteľná poznámka (platí pre všetky fotky)</span>
+          <textarea
+            className="textarea"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            placeholder="viac zelene a kníh"
+          />
+        </label>
       </section>
 
-      {error && (
-        <section style={{ marginBottom: "var(--space-xl)" }}>
-          <div
-            className="prompt-box"
-            style={{
-              borderColor: "var(--color-danger)",
-              color: "var(--color-danger)",
-              background: "var(--color-bg)",
-            }}
-          >
-            {error}
-          </div>
-        </section>
-      )}
+      <section>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: "var(--space-sm)",
+            marginBottom: "var(--space-md)",
+          }}
+        >
+          <h3 style={{ margin: 0 }}>4 · Zariadenie</h3>
+          {photos.length > 0 && (
+            <button
+              type="button"
+              className="button button--primary"
+              onClick={stageAll}
+              disabled={anyBusy}
+            >
+              {anyBusy ? "Pracujem…" : "Zariadiť všetky fotky"}
+            </button>
+          )}
+        </div>
 
-      {generating && (
-        <section style={{ marginBottom: "var(--space-xl)" }}>
-          <p className="muted">
-            Zariaďujem priestor… zachovávam okná, dvere aj perspektívu. Chvíľku to trvá.
-          </p>
-        </section>
-      )}
-
-      {result && (
-        <section style={{ marginBottom: "var(--space-xl)" }}>
-          <h3 style={{ marginBottom: "var(--space-md)" }}>Výsledok — pred / po</h3>
+        {photos.length === 0 ? (
+          <p className="muted">Najprv nahraj fotky v kroku 1.</p>
+        ) : (
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
               gap: "var(--space-md)",
             }}
           >
-            <div>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={result.inputUrl}
-                alt="Pred"
-                style={{ width: "100%", borderRadius: "var(--radius)", border: "1px solid var(--color-border)" }}
+            {photos.map((p) => (
+              <PhotoCard
+                key={p.id}
+                photo={p}
+                onRoomTypeChange={handleRoomType}
+                onStage={stagePhoto}
+                onRemove={removePhoto}
               />
-              <p className="muted" style={{ textAlign: "center", marginTop: "var(--space-xs)" }}>Pred</p>
-            </div>
-            <div style={{ position: "relative" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={result.outputUrl}
-                alt="Po — virtuálne zariadené"
-                style={{ width: "100%", borderRadius: "var(--radius)", border: "1px solid var(--color-border)" }}
-              />
-              <span
-                style={{
-                  position: "absolute",
-                  top: "8px",
-                  right: "8px",
-                  fontSize: "12px",
-                  padding: "2px 8px",
-                  borderRadius: "var(--radius-full)",
-                  background: "var(--color-accent)",
-                  color: "#3d2a06",
-                }}
-              >
-                AI · virtuálne
-              </span>
-              <p className="muted" style={{ textAlign: "center", marginTop: "var(--space-xs)" }}>Po</p>
-            </div>
+            ))}
           </div>
-          <p className="muted" style={{ fontSize: "var(--font-size-sm)", marginTop: "var(--space-md)" }}>
-            Cena tohto renderu: ~{result.costCents} c · seed: {result.seed}
-          </p>
-          <p className="muted" style={{ fontSize: "var(--font-size-sm)", marginTop: "var(--space-xs)" }}>
-            Toto je vizualizácia, nie záväzný architektonický návrh. Rozmery a proporcie
-            sú orientačné. Priestor je virtuálne zariadený (AI).
-          </p>
-        </section>
-      )}
-
-      <section>
-        <details>
-          <summary className="muted" style={{ cursor: "pointer", fontSize: "var(--font-size-sm)" }}>
-            Technický náhľad — prompt poslaný do AI
-          </summary>
-          <div className="prompt-box" style={{ marginTop: "var(--space-sm)" }}>{prompt}</div>
-        </details>
+        )}
       </section>
     </main>
   );
