@@ -1,0 +1,65 @@
+/* tokens.css — JEDEN ZDROJ PRAVDY pre vzhľad aplikácie.
+   Pravidlo č. 1: nikdy nepíš konkrétnu farbu/veľkosť priamo do komponentu.
+   Vždy odkazuj na premennú, napr. color: var(--color-primary).
+   Potrebuješ novú hodnotu? Najprv ju pridaj sem ako pomenovaný token. */
+
+:root {
+  /* --- Farby: povrchy --- */
+  --color-bg: #ffffff;          /* pozadie stránky */
+  --color-surface: #f7f8fa;     /* karty, panely */
+  --color-surface-2: #eef1f5;   /* jemné zvýraznenie / hover plochy */
+  --color-border: #e2e6ec;      /* čiary, okraje */
+
+  /* --- Farby: text --- */
+  --color-text: #131722;        /* hlavný text (takmer čierna s nádychom modrej) */
+  --color-text-muted: #5a6273;  /* vedľajší text, popisky */
+  --color-text-inverse: #ffffff;/* text na farebnom pozadí */
+
+  /* --- Farby: akcent (modrá = dôvera, proptech štandard) --- */
+  --color-primary: #2b59ff;     /* tlačidlá, odkazy, aktívne prvky */
+  --color-primary-hover: #1e45d6;
+  --color-primary-subtle: #eaf0ff; /* svetlé pozadie pre zvýraznenie */
+
+  /* --- Farby: teplý doplnok (prémiový nádych, používať striedmo) --- */
+  --color-accent: #e0a33d;      /* "before/after" štítok, drobné akcenty */
+  --color-accent-subtle: #fbf1df;
+
+  /* --- Farby: stavy --- */
+  --color-success: #1ba971;
+  --color-danger: #e5484d;
+  --color-warning: #e0a33d;
+
+  /* --- Písmo --- */
+  --font-base: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 20px;
+  --font-size-xl: 28px;
+  --font-size-2xl: 40px;
+  --line-height: 1.5;
+
+  /* --- Rozostupy --- */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+  --space-2xl: 64px;
+
+  /* --- Zaoblenie --- */
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 16px;
+  --radius-full: 999px;
+
+  /* --- Tiene --- */
+  --shadow-sm: 0 1px 2px rgba(19, 23, 34, 0.06);
+  --shadow-md: 0 4px 16px rgba(19, 23, 34, 0.08);
+  --shadow-lg: 0 12px 32px rgba(19, 23, 34, 0.12);
+
+  /* --- Layout --- */
+  --container-max: 1100px;
+}

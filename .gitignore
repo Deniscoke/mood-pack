@@ -1,0 +1,19 @@
+# Závislosti
+/node_modules
+
+# Next.js build
+/.next
+/out
+next-env.d.ts
+
+# Prostredie / tajné kľúče
+.env
+.env.local
+.env*.local
+
+# Logy a OS
+npm-debug.log*
+.DS_Store
+
+# Testovacie artefakty (Playwright)
+/.playwright-mcp

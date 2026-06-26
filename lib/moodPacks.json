@@ -1,0 +1,98 @@
+[
+  {
+    "id": "scandinavian_calm",
+    "name": "Scandinavian Calm",
+    "description": "Svetlý, vzdušný severský štýl s dreveným nádychom.",
+    "atmosphere": "calm, airy, cozy, uncluttered",
+    "colors": ["#F7F5F2", "#E8E3DD", "#C9BBA8", "#7E8C7C", "#2E2E2E"],
+    "materials": ["light oak wood", "wool", "linen", "matte white"],
+    "furniture": ["low oak sofa", "soft wool throw", "round wooden coffee table", "paper pendant lamp", "potted greenery"],
+    "lighting": "soft natural daylight, warm diffuse light",
+    "avoid": ["heavy dark furniture", "ornate decor", "clutter", "neon colors"],
+    "promptFragment": "Scandinavian interior, light oak wood, white and beige palette, linen and wool textures, minimal cozy furniture, lots of natural daylight, calm and airy"
+  },
+  {
+    "id": "japandi_soft",
+    "name": "Japandi Soft",
+    "description": "Japonská strohosť + severská útulnosť, prírodné tóny.",
+    "atmosphere": "serene, balanced, warm-minimal",
+    "colors": ["#EDE7DF", "#C8B6A0", "#8A7B6B", "#3F4A3D", "#1F1B16"],
+    "materials": ["natural wood", "bamboo", "stone", "handmade ceramics", "linen"],
+    "furniture": ["low wooden platform bed or sofa", "tatami-style rug", "ceramic vases", "minimal floor lamp", "single bonsai or branch"],
+    "lighting": "soft warm light, gentle shadows",
+    "avoid": ["glossy plastic", "bright saturated colors", "clutter", "heavy ornamentation"],
+    "promptFragment": "Japandi interior, blend of Japanese minimalism and Scandinavian warmth, natural wood and stone, muted earthy tones, low furniture, handmade ceramics, serene and balanced"
+  },
+  {
+    "id": "luxury_real_estate",
+    "name": "Luxury Real Estate",
+    "description": "Reprezentatívny luxus pre prémiové ponuky.",
+    "atmosphere": "elegant, premium, aspirational",
+    "colors": ["#10100F", "#2B2A28", "#B79A6B", "#E7E2DA", "#FFFFFF"],
+    "materials": ["marble", "brass accents", "velvet", "dark walnut", "glass"],
+    "furniture": ["designer velvet sofa", "marble coffee table", "statement floor lamp", "large framed art", "sculptural armchair"],
+    "lighting": "warm accent lighting, soft cinematic glow",
+    "avoid": ["cheap-looking furniture", "clutter", "plastic", "garish colors"],
+    "promptFragment": "luxury real estate interior, marble and brass accents, dark walnut and velvet, designer furniture, elegant warm accent lighting, high-end aspirational staging"
+  },
+  {
+    "id": "industrial_loft",
+    "name": "Industrial Loft",
+    "description": "Surový mestský loft – tehla, kov, drevo.",
+    "atmosphere": "urban, raw, characterful",
+    "colors": ["#2C2A28", "#7A5C45", "#9A9A98", "#3B3B3B", "#D8C4A8"],
+    "materials": ["exposed brick look", "black metal", "reclaimed wood", "leather", "concrete texture"],
+    "furniture": ["leather sofa", "metal-frame shelving", "edison-style lamps", "reclaimed wood table", "vintage rug"],
+    "lighting": "moody directional light, warm bulbs",
+    "avoid": ["pastel colors", "delicate ornate furniture", "glossy surfaces"],
+    "promptFragment": "industrial loft interior, exposed brick and concrete textures, black metal and reclaimed wood, leather furniture, Edison bulb lighting, urban raw character"
+  },
+  {
+    "id": "family_warm_home",
+    "name": "Family Warm Home",
+    "description": "Útulný rodinný domov, kde sa chce bývať.",
+    "atmosphere": "warm, welcoming, lived-in but tidy",
+    "colors": ["#F3EDE3", "#D7A86E", "#9C6B4A", "#6E8B6E", "#3A3A3A"],
+    "materials": ["soft fabric", "warm wood", "cotton", "woven baskets"],
+    "furniture": ["comfy fabric sofa", "soft cushions", "bookshelf", "warm rug", "family-friendly dining set"],
+    "lighting": "warm cozy lighting, soft daylight",
+    "avoid": ["cold minimalism", "sharp edgy decor", "clutter"],
+    "promptFragment": "warm family home interior, comfortable fabric sofa, soft cushions and rugs, warm wood tones, cozy inviting lighting, tidy and welcoming"
+  },
+  {
+    "id": "modern_minimal",
+    "name": "Modern Minimal",
+    "description": "Čisté línie, málo vecí, veľa priestoru.",
+    "atmosphere": "clean, calm, precise",
+    "colors": ["#FFFFFF", "#EDEDED", "#BFBFBF", "#2E2E2E", "#000000"],
+    "materials": ["matte surfaces", "light wood", "glass", "powder-coated metal"],
+    "furniture": ["streamlined sofa", "simple coffee table", "minimal shelving", "single statement plant"],
+    "lighting": "even bright natural light",
+    "avoid": ["ornamentation", "clutter", "busy patterns", "warm vintage tones"],
+    "promptFragment": "modern minimalist interior, clean lines, neutral white and grey palette, streamlined furniture, uncluttered, bright even natural light"
+  },
+  {
+    "id": "mediterranean_light",
+    "name": "Mediterranean Light",
+    "description": "Slnečný juh – teplé tóny, prírodné materiály.",
+    "atmosphere": "sunny, relaxed, breezy",
+    "colors": ["#FBF3E6", "#E0C097", "#C57B57", "#7FA99B", "#3E5C50"],
+    "materials": ["terracotta", "whitewashed wood", "rattan", "linen", "ceramic tiles"],
+    "furniture": ["linen sofa", "rattan chairs", "terracotta pots", "wooden dining table", "woven textiles"],
+    "lighting": "bright warm sunlight, airy",
+    "avoid": ["cold greys", "heavy dark furniture", "industrial metal"],
+    "promptFragment": "Mediterranean interior, warm terracotta and cream tones, whitewashed wood and rattan, linen textures, ceramic accents, bright sunny airy light"
+  },
+  {
+    "id": "premium_developer_showroom",
+    "name": "Premium Developer Showroom",
+    "description": "Neutrálny showroom pre developerské vizualizácie.",
+    "atmosphere": "polished, neutral, market-ready",
+    "colors": ["#F5F4F2", "#D9D4CC", "#A99E8C", "#4B4B4B", "#1C1C1C"],
+    "materials": ["light engineered wood", "matte stone", "glass", "soft neutral fabric"],
+    "furniture": ["contemporary neutral sofa", "coffee table", "subtle art", "designer floor lamp", "styled shelf"],
+    "lighting": "bright clean staged lighting",
+    "avoid": ["bold personal style", "clutter", "strong colors", "themed decor"],
+    "promptFragment": "premium developer showroom interior, neutral market-ready staging, contemporary furniture, light engineered wood and matte stone, clean bright staged lighting, broadly appealing"
+  }
+]
