@@ -31,3 +31,9 @@ Formát: dátum — rozhodnutie — prečo (vrátane "toto sme zámerne NErobili
   — zakázané prvky sú zapracované priamo do pozitívneho promptu ("avoid: …").
 - **Upload fotky cez fal.ai storage** (`fal.storage.upload`), nie cez Supabase.
   Šetrí to krok; Supabase Storage doplníme pri perzistencii výsledkov.
+- **Prompt prepísaný na edit-inštrukciu** (nie opis scény). Flux Kontext je
+  editačný model — dlhý opis interiéru (palety, hex, materiály) spôsoboval, že
+  si izbu vymyslel nanovo namiesto úpravy pôvodnej fotky → nekonzistentné
+  výstupy. Nový prompt: akcia („zariaď túto prázdnu izbu") + dôrazné zachovanie
+  geometrie („keep walls/windows/perspective identical") + krátky štýl.
+  Podľa návodu BFL (docs.bfl.ml/guides/prompting_guide_kontext_i2i).
