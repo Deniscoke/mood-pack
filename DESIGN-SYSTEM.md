@@ -4,37 +4,38 @@
 > **jednom mieste**: `styles/tokens.css`. Tu je vysvetlené, čo znamenajú.
 
 ## CSS prístup
-**Vlastný malý framework + metóda BEM** (možnosť A). Postavíme si jednoduché
-štýly na mieru (`styles/base.css`), triedy pomenúvame `blok__prvok--variant`
-(napr. `card`, `card__title`, `button--primary`). Plná kontrola, ľahké, bez
-balastu. Tento základ rozširujeme v rovnakom systéme, nie ad-hoc inde.
+**Vlastný malý framework + metóda BEM** (`styles/base.css`). Triedy pomenúvame
+`blok__prvok--variant`. Tento základ rozširujeme v rovnakom systéme.
 
-## Paleta (a prečo)
-Nálada: **svetlá, dôveryhodná, profesionálna** — vhodná pre realitný nástroj.
-Modrá nesie dôveru (proptech štandard), teplá zlatá dáva prémiový nádych.
+## Paleta — prémiová TMAVÁ + teplé zlato
+Nálada: **tmavá elegancia, luxusný interiér + dôvera.** Tmavé pozadie dáva
+fotkám vyniknúť, teplé zlato (namiesto „rockovej" červenej) pôsobí draho a seriózne.
 
 | Token | Hodnota | Na čo |
 |---|---|---|
-| `--color-bg` | `#ffffff` | pozadie stránky |
-| `--color-surface` | `#f7f8fa` | karty, panely |
-| `--color-surface-2` | `#eef1f5` | hover / jemné plochy |
-| `--color-border` | `#e2e6ec` | okraje, čiary |
-| `--color-text` | `#131722` | hlavný text |
-| `--color-text-muted` | `#5a6273` | popisky, vedľajší text |
-| `--color-primary` | `#2b59ff` | tlačidlá, odkazy, akcia |
-| `--color-primary-hover` | `#1e45d6` | tlačidlo pri prejdení myšou |
-| `--color-primary-subtle` | `#eaf0ff` | svetlé modré zvýraznenie |
-| `--color-accent` | `#e0a33d` | teplý akcent, "before/after" štítok |
-| `--color-success` | `#1ba971` | úspech / hotovo |
-| `--color-danger` | `#e5484d` | chyba |
+| `--color-bg` | `#0c0c0d` | pozadie stránky (jemný teplý gradient) |
+| `--color-surface` | `#161617` | karty, panely |
+| `--color-surface-2` | `#202022` | hover / jemné plochy |
+| `--color-border` | `#2c2c2e` | okraje, čiary |
+| `--color-text` | `#f6f5f3` | hlavný text |
+| `--color-text-muted` | `#a6a6aa` | popisky, vedľajší text |
+| `--color-primary` | `#d4a24e` | tlačidlá, odkazy, aktívne prvky (zlato) |
+| `--color-primary-hover` | `#e2b365` | zlato pri prejdení myšou |
+| `--color-text-inverse` | `#14110a` | tmavý text na zlatom pozadí |
+| `--color-success` | `#5cc98f` | úspech / hotovo |
+| `--color-danger` | `#ff5d61` | chyba |
 
 ## Písmo
-**Inter** pre celé UI — výborne čitateľné, neutrálne, dôveryhodné. Jedno písmo
-pre všetko (jednoduchosť, konzistencia). Prémiové párovanie s pätkovým nadpisom
-zvážime až neskôr, ak bude treba.
+- **Inter** — telo a UI (čitateľné, neutrálne).
+- **Georgia (serif)** `--font-display` — **nadpisy** (h1, h2): prémiový,
+  editorial nádych.
 
 ## Škály
 - **Rozostupy:** `--space-xs`(4) `sm`(8) `md`(16) `lg`(24) `xl`(40) `2xl`(64).
-- **Veľkosti písma:** `sm`(14) `md`(16) `lg`(20) `xl`(28) `2xl`(40).
-- **Zaoblenie:** `--radius-sm`(6) `--radius`(10) `--radius-lg`(16) `--radius-full`.
-- **Tiene:** `--shadow-sm/md/lg` (jemné, premyslené).
+- **Veľkosti písma:** `sm`(14) `md`(16) `lg`(20) `xl`(28) `2xl`(42).
+- **Zaoblenie:** `--radius-sm`(8) `--radius`(12) `--radius-lg`(20) `--radius-full`.
+- **Tiene:** `--shadow-sm/md/lg` (hlbšie, na tmavé pozadie).
+
+## Špeciálne prvky
+- **Leštené zlaté tlačidlo** (`.button--primary`): zlatý gradient s vnútornými
+  odleskmi (inšpirované referenciou, prefarbené z červenej do zlata).

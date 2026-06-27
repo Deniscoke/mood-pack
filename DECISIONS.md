@@ -51,4 +51,10 @@ Formát: dátum — rozhodnutie — prečo (vrátane "toto sme zámerne NErobili
   research naznačuje, že Kontext drží štruktúru lepšie, GPT môže orezať (pevné
   veľkosti) a je drahší (~7 c/25 c vs 4 c/8 c). Necháme prepínateľné, nech sa dá
   porovnať a vrátiť. fal sa stále používa na upload, detekciu a hosting výstupu.
-  Vyžaduje `OPENAI_API_KEY` + overenú OpenAI organizáciu (gpt-image-1).
+  Vyžaduje `OPENAI_API_KEY` + overenú OpenAI organizáciu.
+- **Model zmenený na `gpt-image-2`** (gpt-image-1 sa ruší 23.10.2026). Novší,
+  lacnejší, vstupnú fotku drží vo vysokej vernosti automaticky.
+- **Vzhľad zmenený na prémiový TMAVÝ** s teplým zlatým akcentom + serif nadpismi
+  (Georgia). Inšpirované referenčným UI od používateľa, ale „rockovú" červenú sme
+  zámerne vymenili za zlato — sedí k interiérom a pôsobí dôveryhodne pre realitky.
+  Zmena cez tokeny (`tokens.css` + `base.css`), preto sa preoblékla celá appka naraz.

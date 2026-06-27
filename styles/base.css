@@ -1,4 +1,4 @@
-/* base.css — vlastný malý CSS framework (BEM). Rozširuj v tomto systéme.
+/* base.css — vlastný malý CSS framework (BEM), prémiový tmavý vzhľad.
    Hodnoty ber z tokens.css, nikdy nepíš farby/veľkosti natvrdo do komponentov. */
 
 *,
@@ -15,7 +15,10 @@ body {
 }
 
 body {
-  background: var(--color-bg);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(212, 162, 78, 0.06), transparent 42%),
+    linear-gradient(180deg, #0e0e0f 0%, var(--color-bg) 100%);
+  background-attachment: fixed;
   color: var(--color-text);
   font-family: var(--font-base);
   font-size: var(--font-size-md);
@@ -23,13 +26,18 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Nadpisy: serif = prémiový, editorial nádych */
 h1 {
+  font-family: var(--font-display);
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
+  letter-spacing: -0.025em;
 }
 h2 {
+  font-family: var(--font-display);
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
+  letter-spacing: -0.02em;
 }
 h3 {
   font-size: var(--font-size-lg);
@@ -44,11 +52,19 @@ a:hover {
   text-decoration: underline;
 }
 
+/* Tlačidlá dedia farbu textu (inak ich prehliadač zosvetlí/stmaví po svojom) */
+button {
+  font-family: inherit;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
 /* --- Layout --- */
 .container {
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: var(--space-xl) var(--space-md);
+  padding: var(--space-2xl) var(--space-md);
 }
 
 /* --- Tlačidlo --- */
@@ -59,38 +75,61 @@ a:hover {
   gap: var(--space-sm);
   font: inherit;
   font-weight: var(--font-weight-medium);
-  padding: 10px var(--space-md);
-  border-radius: var(--radius);
+  padding: 11px var(--space-md);
+  border-radius: var(--radius-sm);
   border: 1px solid transparent;
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  transition: transform 0.18s ease, filter 0.18s ease, background-color 0.18s ease;
 }
+
+/* Leštené zlaté primárne tlačidlo (inšpirované ukážkou, prefarbené do zlata) */
 .button--primary {
-  background: var(--color-primary);
   color: var(--color-text-inverse);
+  border-color: #e6bd72;
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: var(--font-size-sm);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0) 40%),
+    linear-gradient(180deg, #e3b566 0%, #d4a24e 48%, #b9893a 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.18),
+    0 8px 18px rgba(212, 162, 78, 0.18);
 }
 .button--primary:hover {
-  background: var(--color-primary-hover);
+  transform: translateY(-1px);
+  filter: brightness(1.06);
 }
+.button--primary:active {
+  transform: translateY(0);
+  filter: brightness(0.97);
+}
+
 .button--ghost {
-  background: var(--color-bg);
+  background: var(--color-surface-2);
   color: var(--color-text);
   border-color: var(--color-border);
 }
 .button--ghost:hover {
-  background: var(--color-surface-2);
+  background: #2a2a2c;
+  border-color: #3a3a3d;
 }
 .button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
+  filter: none;
 }
 
 /* --- Karta --- */
 .card {
-  background: var(--color-bg);
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: var(--space-md);
+  box-shadow: var(--shadow-sm);
 }
 
 /* --- Formulárové prvky --- */
@@ -110,10 +149,14 @@ a:hover {
   width: 100%;
   font: inherit;
   color: var(--color-text);
-  background: var(--color-bg);
+  background: #121213;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 10px var(--space-sm);
+  border-radius: var(--radius-sm);
+  padding: 11px var(--space-sm);
+}
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--color-text-muted);
 }
 .input:focus,
 .select:focus,
@@ -127,22 +170,27 @@ a:hover {
   resize: vertical;
 }
 
-/* --- Pill (výber štýlu) --- */
+/* --- Pill (výber kvality) --- */
 .pill {
   display: inline-flex;
   align-items: center;
   font-size: var(--font-size-sm);
-  padding: 6px 12px;
+  padding: 8px 14px;
   border-radius: var(--radius-full);
   border: 1px solid var(--color-border);
-  background: var(--color-surface);
+  background: var(--color-surface-2);
   color: var(--color-text);
   cursor: pointer;
+  transition: border-color 0.18s ease, background-color 0.18s ease;
+}
+.pill:hover {
+  border-color: #3a3a3d;
 }
 .pill--active {
   background: var(--color-primary);
   color: var(--color-text-inverse);
   border-color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
 }
 
 /* --- Swatch (farebná bodka) --- */
@@ -150,23 +198,7 @@ a:hover {
   width: 16px;
   height: 16px;
   border-radius: 4px;
-  border: 1px solid var(--color-border);
-}
-
-/* --- Prompt výstup --- */
-.prompt-box {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: var(--space-md);
-  font-size: var(--font-size-sm);
-  color: var(--color-text);
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
-.muted {
-  color: var(--color-text-muted);
+  border: 1px solid var(--color-border-soft);
 }
 
 /* --- Upload zóna (ťahaj-a-pusti) --- */
@@ -176,8 +208,9 @@ a:hover {
   padding: var(--space-xl);
   text-align: center;
   color: var(--color-text-muted);
+  background: var(--color-surface);
   cursor: pointer;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  transition: border-color 0.18s ease, background-color 0.18s ease;
 }
 .upload:hover,
 .upload--drag {
@@ -189,8 +222,25 @@ a:hover {
 .badge {
   display: inline-block;
   font-size: 12px;
-  padding: 2px 8px;
+  font-weight: var(--font-weight-medium);
+  padding: 3px 9px;
   border-radius: var(--radius-full);
   background: var(--color-accent);
-  color: #3d2a06;
+  color: var(--color-text-inverse);
+}
+
+/* --- Prompt výstup --- */
+.prompt-box {
+  background: #121213;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.muted {
+  color: var(--color-text-muted);
 }
