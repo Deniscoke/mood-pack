@@ -10,5 +10,8 @@ export const PRICING: Record<Quality, { model: string; costCents: number }> = {
   final: { model: "fal-ai/flux-pro/kontext/max", costCents: 8 },
 };
 
+// Približná cena rozpoznania typu miestnosti (Moondream vision) na jednu fotku.
+export const DETECT_COST_CENTS = 1;
+
 // Limit náhľadov na používateľa (zatiaľ konštanta; neskôr z databázy).
 export const FREE_RENDER_LIMIT = 10;

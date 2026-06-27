@@ -1,5 +1,6 @@
-// Spoločné rozhranie pre AI image providera. Za týmto rozhraním je v MVP jediná
-// implementácia (fal.ts). Vymeniť/pridať providera = jeden nový súbor.
+// Spoločné rozhranie pre AI providera. V MVP jediná implementácia (fal.ai).
+// Okrem generovania (stage) zvláda aj "describe" — položí otázku k obrázku
+// (vision), čo používame na automatické rozpoznanie typu miestnosti.
 
 import type { Quality } from "../cost";
 
@@ -18,5 +19,6 @@ export interface StageResult {
 
 export interface ImageProvider {
   upload(file: Blob): Promise<string>;
+  describe(imageUrl: string, question: string): Promise<string>;
   stage(params: StageParams): Promise<StageResult>;
 }

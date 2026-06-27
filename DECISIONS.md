@@ -38,5 +38,10 @@ Formát: dátum — rozhodnutie — prečo (vrátane "toto sme zámerne NErobili
   geometrie („keep walls/windows/perspective identical") + krátky štýl.
   Podľa návodu BFL (docs.bfl.ml/guides/prompting_guide_kontext_i2i).
 - **Zrušený manuálny výber typu miestnosti.** Užívateľ nič nevyberá — model si
-  typ izby určí sám z fotky (vidí ju). Jednoduchšie UX, ubudol kód (`lib/rooms.ts`,
-  `RoomType`), a zmizol problém „vnútený zlý typ = kúpeľňa s gaučom".
+  typ izby určí sám z fotky (vidí ju). Jednoduchšie UX, ubudol kód.
+- **Pridaná automatická detekcia izby (vision).** Keďže Flux Kontext si typ izby
+  počas generovania „hádal" zle (kúpeľňa → gauč), pred zariadením teraz fotku
+  prečíta vision model **Moondream** (`fal-ai/moondream3-preview/query`) a vráti
+  typ miestnosti → prompt je potom konkrétny („toto je kúpeľňa"). Beží na tom
+  istom fal.ai účte (žiadny nový kľúč), ~1 c na fotku navyše. Spoľahlivejšie než
+  nechať to hádať Kontextu. Detekcia má fallback "other" — nezhodí render.

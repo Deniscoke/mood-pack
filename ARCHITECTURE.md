@@ -53,9 +53,11 @@ types.ts                     # spoločné TS typy
 - ✅ Jadro bez nákladov: `types.ts`, `lib/moodPacks.*`, `lib/promptEngine.ts`.
 - ✅ Next.js 16 + React 19 kostra, tokeny napojené (`styles/tokens.css` +
   `styles/base.css`), hlavná obrazovka `app/page.tsx`.
-- ✅ Image provider (fal.ai Flux Kontext) za rozhraním `lib/imageProvider/`,
-  ceny v `lib/cost.ts`, API `app/api/render` (upload → prompt → render), UI s
-  nahraním fotky, výberom kvality a zobrazením „pred/po". `npm run build` prechádza.
-- ⛔ Blokované na strane fal.ai: účet má vyčerpaný kredit (`User is locked.
-  Exhausted balance`). Kľúč je platný; treba dobiť kredit, aby render prebehol.
+- ✅ Image provider za rozhraním `lib/imageProvider/` (fal.ai): `stage` = Flux
+  Kontext (zariadenie), `describe` = Moondream (vízia). Ceny v `lib/cost.ts`.
+- ✅ **Automatické rozpoznanie izby** `lib/roomDetect.ts` — pred zariadením
+  Moondream určí typ miestnosti (kúpeľňa/kuchyňa…), užívateľ nič nevyberá.
+- ✅ API `app/api/render`: upload → **rozpoznanie izby** → prompt → render. UI s
+  viacnásobným nahraním, kvalitou, „pred/po" a zobrazením rozpoznaného typu.
+  Render naživo overený (`npm run build` prechádza, fal.ai kredit funguje).
 - ⏳ Ďalej: Supabase (DB/Storage), limit renderov, perzistencia výsledkov, cache.

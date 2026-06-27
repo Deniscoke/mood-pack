@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { imageProvider } from "@/lib/imageProvider";
 import { buildPrompt } from "@/lib/promptEngine";
 import { getMoodPack } from "@/lib/moodPacks";
+import { detectRoom } from "@/lib/roomDetect";
+import { DETECT_COST_CENTS } from "@/lib/cost";
 import type { Quality } from "@/lib/cost";
 
 export const runtime = "nodejs";
@@ -24,14 +26,18 @@ export async function POST(req: Request) {
     }
 
     const imageUrl = await imageProvider.upload(file);
-    const { prompt } = buildPrompt({ moodPack, userNote: note });
+    // 1) Najprv AI rozpozná typ miestnosti z fotky.
+    const room = await detectRoom(imageUrl);
+    // 2) Podľa toho poskladáme prompt a zariadime.
+    const { prompt } = buildPrompt({ moodPack, room, userNote: note });
     const result = await imageProvider.stage({ imageUrl, prompt, quality });
 
     return NextResponse.json({
       inputUrl: imageUrl,
       outputUrl: result.imageUrl,
       seed: result.seed,
-      costCents: result.costCents,
+      room,
+      costCents: result.costCents + DETECT_COST_CENTS,
     });
   } catch (err) {
     const e = err as { body?: { detail?: string }; message?: string };

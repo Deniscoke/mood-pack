@@ -9,7 +9,21 @@ export interface RenderResult {
   outputUrl: string;
   seed: number;
   costCents: number;
+  room?: string; // typ miestnosti rozpoznaný AI (napr. "bathroom")
 }
+
+// Preklad rozpoznaného typu miestnosti do slovenčiny (na zobrazenie).
+const ROOM_LABELS: Record<string, string> = {
+  living_room: "Obývačka",
+  bedroom: "Spálňa",
+  kitchen: "Kuchyňa",
+  bathroom: "Kúpeľňa",
+  dining_room: "Jedáleň",
+  home_office: "Pracovňa",
+  kids_room: "Detská izba",
+  hallway: "Predsieň",
+  other: "Iná miestnosť",
+};
 
 export interface Photo {
   id: string;
@@ -117,7 +131,8 @@ export function PhotoCard({
 
       {photo.status === "done" && photo.result && (
         <p className="muted" style={{ fontSize: "var(--font-size-sm)", marginTop: "var(--space-sm)" }}>
-          ~{photo.result.costCents} c · vizualizácia, nie záväzný návrh · virtuálne zariadené (AI)
+          Rozpoznané: {ROOM_LABELS[photo.result.room ?? "other"] ?? "Iná miestnosť"} ·
+          {" "}~{photo.result.costCents} c · vizualizácia, nie záväzný návrh · virtuálne zariadené (AI)
         </p>
       )}
     </div>
