@@ -37,3 +37,6 @@ Formát: dátum — rozhodnutie — prečo (vrátane "toto sme zámerne NErobili
   výstupy. Nový prompt: akcia („zariaď túto prázdnu izbu") + dôrazné zachovanie
   geometrie („keep walls/windows/perspective identical") + krátky štýl.
   Podľa návodu BFL (docs.bfl.ml/guides/prompting_guide_kontext_i2i).
+- **Zrušený manuálny výber typu miestnosti.** Užívateľ nič nevyberá — model si
+  typ izby určí sám z fotky (vidí ju). Jednoduchšie UX, ubudol kód (`lib/rooms.ts`,
+  `RoomType`), a zmizol problém „vnútený zlý typ = kúpeľňa s gaučom".

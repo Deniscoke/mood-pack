@@ -9,9 +9,10 @@ už existuje, použi to (Pravidlo č. 2).
 - **Stavy:** normálny, pri pretiahnutí súboru (zvýraznený modrý rámček).
 
 ## PhotoCard — `components/PhotoCard.tsx`
-- **Na čo:** jedna fotka miestnosti — náhľad, výber typu miestnosti, generovanie,
-  výsledok „pred/po", odstránenie.
-- **Props:** `photo`, `onRoomTypeChange(id, roomType)`, `onStage(photo)`, `onRemove(id)`.
+- **Na čo:** jedna fotka miestnosti — názov súboru, náhľad, generovanie,
+  výsledok „pred/po", odstránenie. **Typ miestnosti sa nevyberá** — rozpozná ho
+  AI z fotky.
+- **Props:** `photo`, `onStage(photo)`, `onRemove(id)`.
 - **Stavy:** `idle` (nezariadené), `generating` (zariaďujem), `done` (pred/po + cena
   + doložka), `error` (chybová hláška).
 - **Exportuje typy:** `Photo`, `RenderResult`, `PhotoStatus`.

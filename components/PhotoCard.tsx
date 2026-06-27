@@ -1,8 +1,6 @@
 "use client";
 
 import type { CSSProperties } from "react";
-import { ROOM_TYPES } from "@/lib/rooms";
-import type { RoomType } from "@/types";
 
 export type PhotoStatus = "idle" | "generating" | "done" | "error";
 
@@ -17,7 +15,6 @@ export interface Photo {
   id: string;
   file: File;
   previewUrl: string;
-  roomType: RoomType;
   status: PhotoStatus;
   result: RenderResult | null;
   error: string | null;
@@ -25,12 +22,10 @@ export interface Photo {
 
 export function PhotoCard({
   photo,
-  onRoomTypeChange,
   onStage,
   onRemove,
 }: {
   photo: Photo;
-  onRoomTypeChange: (id: string, roomType: RoomType) => void;
   onStage: (photo: Photo) => void;
   onRemove: (id: string) => void;
 }) {
@@ -43,22 +38,21 @@ export function PhotoCard({
           display: "flex",
           gap: "var(--space-sm)",
           alignItems: "center",
+          justifyContent: "space-between",
           marginBottom: "var(--space-sm)",
         }}
       >
-        <select
-          className="select"
-          value={photo.roomType}
-          disabled={busy}
-          onChange={(e) => onRoomTypeChange(photo.id, e.target.value as RoomType)}
-          style={{ flex: 1 }}
+        <span
+          className="muted"
+          style={{
+            fontSize: "var(--font-size-sm)",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
         >
-          {ROOM_TYPES.map((r) => (
-            <option key={r.value} value={r.value}>
-              {r.label}
-            </option>
-          ))}
-        </select>
+          {photo.file.name}
+        </span>
         <button
           type="button"
           className="button button--ghost"

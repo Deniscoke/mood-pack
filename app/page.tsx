@@ -4,7 +4,6 @@ import { useState } from "react";
 import { moodPacks } from "@/lib/moodPacks";
 import { PRICING } from "@/lib/cost";
 import type { Quality } from "@/lib/cost";
-import type { RoomType } from "@/types";
 import { UploadZone } from "@/components/UploadZone";
 import { PhotoCard, type Photo } from "@/components/PhotoCard";
 
@@ -22,7 +21,6 @@ export default function Home() {
       id: crypto.randomUUID(),
       file: f,
       previewUrl: URL.createObjectURL(f),
-      roomType: "living_room" as RoomType,
       status: "idle",
       result: null,
       error: null,
@@ -42,17 +40,12 @@ export default function Home() {
     });
   }
 
-  function handleRoomType(id: string, roomType: RoomType) {
-    updatePhoto(id, { roomType });
-  }
-
   async function stagePhoto(photo: Photo) {
     updatePhoto(photo.id, { status: "generating", error: null });
     try {
       const fd = new FormData();
       fd.append("image", photo.file);
       fd.append("moodPackId", packId);
-      fd.append("roomType", photo.roomType);
       fd.append("note", note);
       fd.append("quality", quality);
       const res = await fetch("/api/render", { method: "POST", body: fd });
@@ -98,7 +91,8 @@ export default function Home() {
       <section style={{ marginBottom: "var(--space-xl)" }}>
         <h3 style={{ marginBottom: "var(--space-sm)" }}>2 · Spoločný štýl pre celý byt</h3>
         <p className="muted" style={{ fontSize: "var(--font-size-sm)", marginBottom: "var(--space-sm)" }}>
-          Jeden mood pack pre všetky fotky — aby byt pôsobil jednotne.
+          Jeden mood pack pre všetky fotky — aby byt pôsobil jednotne. Typ miestnosti
+          rozpozná AI sama z fotky.
         </p>
         <div
           style={{
@@ -204,7 +198,6 @@ export default function Home() {
               <PhotoCard
                 key={p.id}
                 photo={p}
-                onRoomTypeChange={handleRoomType}
                 onStage={stagePhoto}
                 onRemove={removePhoto}
               />

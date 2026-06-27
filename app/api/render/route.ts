@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { imageProvider } from "@/lib/imageProvider";
 import { buildPrompt } from "@/lib/promptEngine";
 import { getMoodPack } from "@/lib/moodPacks";
-import type { RoomType } from "@/types";
 import type { Quality } from "@/lib/cost";
 
 export const runtime = "nodejs";
@@ -13,7 +12,6 @@ export async function POST(req: Request) {
     const form = await req.formData();
     const file = form.get("image");
     const moodPackId = String(form.get("moodPackId") ?? "");
-    const roomType = String(form.get("roomType") ?? "living_room") as RoomType;
     const note = String(form.get("note") ?? "");
     const quality = String(form.get("quality") ?? "preview") as Quality;
 
@@ -26,7 +24,7 @@ export async function POST(req: Request) {
     }
 
     const imageUrl = await imageProvider.upload(file);
-    const { prompt } = buildPrompt({ moodPack, roomType, userNote: note });
+    const { prompt } = buildPrompt({ moodPack, userNote: note });
     const result = await imageProvider.stage({ imageUrl, prompt, quality });
 
     return NextResponse.json({
