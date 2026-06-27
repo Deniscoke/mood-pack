@@ -1,5 +1,6 @@
-// Zariadenie cez OpenAI gpt-image-1 (alternatíva k fal Flux Kontext).
-// gpt-image-1 vie upravovať nahranú fotku; input_fidelity:"high" ju núti držať.
+// Zariadenie cez OpenAI gpt-image-2 (alternatíva k fal Flux Kontext).
+// gpt-image-2 = aktuálny najlepší model; nahranú fotku drží vo vysokej vernosti
+// automaticky (gpt-image-1 sa navyše ruší 23.10.2026).
 // OPENAI_API_KEY sa číta z prostredia (.env.local / Vercel) — nikdy nie v kóde.
 
 import OpenAI, { toFile } from "openai";
@@ -20,12 +21,11 @@ export async function stageWithOpenAI(params: StageParams): Promise<StageResult>
 
   const cfg = OPENAI_PRICING[params.quality];
   const result = await client.images.edit({
-    model: "gpt-image-1",
+    model: "gpt-image-2",
     image,
     prompt: params.prompt,
     size: "auto",
     quality: cfg.quality,
-    input_fidelity: "high",
   });
 
   const b64 = result.data?.[0]?.b64_json;
