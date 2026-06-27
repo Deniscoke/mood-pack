@@ -7,10 +7,9 @@
 import type { MoodPack, RoomType } from "../types";
 
 const PRESERVE_CLAUSE =
-  "while keeping the room's walls, windows, doors, floor, ceiling, overall layout, " +
-  "proportions, camera angle and perspective exactly as in the original photo. " +
-  "Do not change, move, add or remove any architectural or structural element — " +
-  "only add furniture and decor, change nothing else about the room.";
+  "Keep the room's geometry and viewpoint unchanged: do not move or resize the " +
+  "walls, windows or doors, and keep the same room shape, proportions, ceiling " +
+  "height, camera angle and perspective as in the original photo.";
 
 const REALISM =
   "Photorealistic real estate interior photo, realistic furniture scale, " +
@@ -53,7 +52,12 @@ export interface BuiltPrompt {
 export function buildPrompt(input: BuildPromptInput): BuiltPrompt {
   const preserve =
     input.preserveGeometry === false ? "" : PRESERVE_CLAUSE + " ";
-  const note = input.userNote?.trim() ? ` ${input.userNote.trim()}.` : "";
+
+  // Poznámka užívateľa = výslovná požiadavka. Dáme jej dôraz a umiestnime PRED
+  // zachovanie geometrie, aby ju model neprehliadol (napr. "grafity na stene").
+  const request = input.userNote?.trim()
+    ? `Important — the user specifically requested this, you must apply it: ${input.userNote.trim()}. `
+    : "";
 
   // Mood pack ako ŠTÝL (žiadny konkrétny nábytok): nálada + materiály + svetlo.
   const style =
@@ -64,10 +68,10 @@ export function buildPrompt(input: BuildPromptInput): BuiltPrompt {
   const prompt =
     ROOM_FURNISHING[input.room] +
     " " +
-    `Apply this visual style to materials, colours, lighting and mood only: ${style}. ` +
+    `Apply this visual style to materials, colours, lighting and mood: ${style}. ` +
+    request +
     preserve +
-    REALISM +
-    note;
+    REALISM;
 
   const negativePrompt = [
     "sofa or living-room furniture in a bathroom, toilet, hallway or kitchen",

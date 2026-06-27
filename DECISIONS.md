@@ -62,3 +62,8 @@ Formát: dátum — rozhodnutie — prečo (vrátane "toto sme zámerne NErobili
   ovládanie: nahranie/štýl/kvalita, vpravo plocha s výsledkami „pred/po"), namiesto
   voľne plávajúcich sekcií. Pôsobí zomknuto a moderne, využíva šírku. Na mobile
   sa panely poskladajú pod seba.
+- **Poznámka užívateľa sa teraz reálne aplikuje.** Predtým prompt obsahoval „nič
+  iné na izbe nemeň", čo prebíjalo požiadavky meniace steny (napr. „grafity na
+  stene"). Zmena: zachovávame len GEOMETRIU/perspektívu (steny sa nehýbu), zrušili
+  sme „nič nemeň", a poznámku **zdôrazňujeme a dávame dopredu** ("you must apply
+  it"). Pozn.: jedna fotka aj „všetky" používajú rovnaký vstup — nič sa nedelí.
