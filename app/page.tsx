@@ -61,7 +61,6 @@ export default function Home() {
   }
 
   async function stageAll() {
-    // Sekvenčne — kvôli kontrole nákladov a záťaže.
     for (const p of photos) {
       if (p.status !== "done" && p.status !== "generating") {
         await stagePhoto(p);
@@ -70,141 +69,115 @@ export default function Home() {
   }
 
   return (
-    <main className="container">
-      <header style={{ marginBottom: "var(--space-xl)" }}>
-        <h1>Mood Pack</h1>
-        <p className="muted">
-          Virtuálne zariadenie prázdnych priestorov pre realitky a developerov.
-        </p>
+    <>
+      <header className="topbar">
+        <div className="topbar__inner">
+          <span className="brand">Mood Pack</span>
+          <span className="brand__tag muted">
+            Virtuálne zariadenie priestorov pre realitky a developerov
+          </span>
+        </div>
       </header>
 
-      <section style={{ marginBottom: "var(--space-xl)" }}>
-        <h3 style={{ marginBottom: "var(--space-sm)" }}>1 · Nahraj fotky bytu</h3>
-        <UploadZone onAdd={addFiles} />
-        {photos.length > 0 && (
-          <p className="muted" style={{ fontSize: "var(--font-size-sm)", marginTop: "var(--space-sm)" }}>
-            Nahraných fotiek: {photos.length}
-          </p>
-        )}
-      </section>
-
-      <section style={{ marginBottom: "var(--space-xl)" }}>
-        <h3 style={{ marginBottom: "var(--space-sm)" }}>2 · Spoločný štýl pre celý byt</h3>
-        <p className="muted" style={{ fontSize: "var(--font-size-sm)", marginBottom: "var(--space-sm)" }}>
-          Jeden mood pack pre všetky fotky — aby byt pôsobil jednotne. Typ miestnosti
-          rozpozná AI sama z fotky.
-        </p>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-            gap: "var(--space-sm)",
-          }}
-        >
-          {moodPacks.map((p) => {
-            const active = p.id === packId;
-            return (
-              <button
-                key={p.id}
-                type="button"
-                onClick={() => setPackId(p.id)}
-                className="card"
-                style={{
-                  textAlign: "left",
-                  cursor: "pointer",
-                  borderColor: active ? "var(--color-primary)" : "var(--color-border)",
-                  boxShadow: active ? "0 0 0 3px var(--color-primary-subtle)" : "none",
-                }}
-              >
-                <div style={{ display: "flex", gap: "4px", marginBottom: "var(--space-sm)" }}>
-                  {p.colors.map((c) => (
-                    <span key={c} className="swatch" style={{ background: c }} />
-                  ))}
-                </div>
-                <div style={{ fontWeight: 500 }}>{p.name}</div>
-                <div className="muted" style={{ fontSize: "var(--font-size-sm)" }}>
-                  {p.description}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
-      <section style={{ marginBottom: "var(--space-xl)", maxWidth: "520px" }}>
-        <h3 style={{ marginBottom: "var(--space-sm)" }}>3 · Kvalita a poznámka</h3>
-        <div style={{ display: "flex", gap: "var(--space-sm)", marginBottom: "var(--space-md)" }}>
-          <button
-            type="button"
-            className={quality === "preview" ? "pill pill--active" : "pill"}
-            onClick={() => setQuality("preview")}
-          >
-            Náhľad · ~{PRICING.preview.costCents} c
-          </button>
-          <button
-            type="button"
-            className={quality === "final" ? "pill pill--active" : "pill"}
-            onClick={() => setQuality("final")}
-          >
-            Finál (HD) · ~{PRICING.final.costCents} c
-          </button>
-        </div>
-        <label className="field">
-          <span className="field__label">Voliteľná poznámka (platí pre všetky fotky)</span>
-          <textarea
-            className="textarea"
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            placeholder="viac zelene a kníh"
-          />
-        </label>
-      </section>
-
-      <section>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: "var(--space-sm)",
-            marginBottom: "var(--space-md)",
-          }}
-        >
-          <h3 style={{ margin: 0 }}>4 · Zariadenie</h3>
-          {photos.length > 0 && (
-            <button
-              type="button"
-              className="button button--primary"
-              onClick={stageAll}
-              disabled={anyBusy}
-            >
-              {anyBusy ? "Pracujem…" : "Zariadiť všetky fotky"}
-            </button>
-          )}
-        </div>
-
-        {photos.length === 0 ? (
-          <p className="muted">Najprv nahraj fotky v kroku 1.</p>
-        ) : (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-              gap: "var(--space-md)",
-            }}
-          >
-            {photos.map((p) => (
-              <PhotoCard
-                key={p.id}
-                photo={p}
-                onStage={stagePhoto}
-                onRemove={removePhoto}
-              />
-            ))}
+      <main className="app-grid">
+        {/* ĽAVÝ PANEL — ovládanie */}
+        <aside className="panel controls">
+          <div className="panel__section">
+            <h3 className="panel__title">1 · Nahraj fotky bytu</h3>
+            <UploadZone onAdd={addFiles} />
+            {photos.length > 0 && (
+              <p className="muted small" style={{ marginTop: "var(--space-sm)" }}>
+                Nahraných fotiek: {photos.length}
+              </p>
+            )}
           </div>
-        )}
-      </section>
-    </main>
+
+          <div className="panel__section">
+            <h3 className="panel__title">2 · Štýl (jeden pre celý byt)</h3>
+            <p className="muted small">Typ miestnosti rozpozná AI sama z fotky.</p>
+            <div className="packs">
+              {moodPacks.map((p) => (
+                <button
+                  key={p.id}
+                  type="button"
+                  title={p.description}
+                  onClick={() => setPackId(p.id)}
+                  className={p.id === packId ? "pack pack--active" : "pack"}
+                >
+                  <div className="pack__swatches">
+                    {p.colors.map((c) => (
+                      <span key={c} className="swatch" style={{ background: c }} />
+                    ))}
+                  </div>
+                  <div className="pack__name">{p.name}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="panel__section">
+            <h3 className="panel__title">3 · Kvalita a poznámka</h3>
+            <div className="pills">
+              <button
+                type="button"
+                className={quality === "preview" ? "pill pill--active" : "pill"}
+                onClick={() => setQuality("preview")}
+              >
+                Náhľad · ~{PRICING.preview.costCents} c
+              </button>
+              <button
+                type="button"
+                className={quality === "final" ? "pill pill--active" : "pill"}
+                onClick={() => setQuality("final")}
+              >
+                Finál (HD) · ~{PRICING.final.costCents} c
+              </button>
+            </div>
+            <label className="field" style={{ marginTop: "var(--space-md)", marginBottom: 0 }}>
+              <span className="field__label">Voliteľná poznámka (pre všetky fotky)</span>
+              <textarea
+                className="textarea"
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder="viac zelene a kníh"
+              />
+            </label>
+          </div>
+
+          <button
+            type="button"
+            className="button button--primary button--block"
+            onClick={stageAll}
+            disabled={photos.length === 0 || anyBusy}
+          >
+            {anyBusy ? "Pracujem…" : "Zariadiť všetky fotky"}
+          </button>
+        </aside>
+
+        {/* PRAVÝ PANEL — výsledky */}
+        <section className="panel results">
+          {photos.length === 0 ? (
+            <div className="results__empty">
+              <p className="muted">
+                Tu sa zobrazia tvoje fotky „pred → po".
+                <br />
+                Začni nahraním fotiek vľavo.
+              </p>
+            </div>
+          ) : (
+            <div className="gallery">
+              {photos.map((p) => (
+                <PhotoCard
+                  key={p.id}
+                  photo={p}
+                  onStage={stagePhoto}
+                  onRemove={removePhoto}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+      </main>
+    </>
   );
 }

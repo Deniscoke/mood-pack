@@ -58,3 +58,7 @@ Formát: dátum — rozhodnutie — prečo (vrátane "toto sme zámerne NErobili
   (Georgia). Inšpirované referenčným UI od používateľa, ale „rockovú" červenú sme
   zámerne vymenili za zlato — sedí k interiérom a pôsobí dôveryhodne pre realitky.
   Zmena cez tokeny (`tokens.css` + `base.css`), preto sa preoblékla celá appka naraz.
+- **Rozloženie zmenené na jednotný „nástroj"**: horná lišta + dva panely (vľavo
+  ovládanie: nahranie/štýl/kvalita, vpravo plocha s výsledkami „pred/po"), namiesto
+  voľne plávajúcich sekcií. Pôsobí zomknuto a moderne, využíva šírku. Na mobile
+  sa panely poskladajú pod seba.
