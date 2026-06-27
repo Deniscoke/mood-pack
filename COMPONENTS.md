@@ -8,13 +8,13 @@ už existuje, použi to (Pravidlo č. 2).
 - **Props:** `onAdd(files: File[])`.
 - **Stavy:** normálny, pri pretiahnutí súboru (zvýraznený modrý rámček).
 
-## PhotoCard — `components/PhotoCard.tsx`
-- **Na čo:** jedna fotka miestnosti — názov súboru, náhľad, generovanie,
-  výsledok „pred/po", odstránenie. **Typ miestnosti sa nevyberá** — rozpozná ho
-  AI z fotky.
-- **Props:** `photo`, `onStage(photo)`, `onRemove(id)`.
-- **Stavy:** `idle` (nezariadené), `generating` (zariaďujem), `done` (pred/po + cena
-  + doložka), `error` (chybová hláška).
+## PhotoViewer — `components/PhotoViewer.tsx`
+- **Na čo:** prehliadač nahraných fotiek s **listovaním** — jedna fotka veľká
+  na celé okno, šípky ‹ › + počítadlo, prepínač **Pred | Po**, tlačidlo
+  „Zariadiť priestor" a dole **pásik náhľadov**. Typ miestnosti rozpozná AI.
+- **Props:** `photos` (pole), `onStage(photo)`, `onRemove(id)`.
+- **Stavy fotky:** `idle`, `generating` (prekrytie „Zariaďujem…"), `done`
+  (prepínač Po sa odomkne + cena/typ izby), `error`.
 - **Exportuje typy:** `Photo`, `RenderResult`, `PhotoStatus`.
 
 ## CSS triedy (BEM) — `styles/base.css`

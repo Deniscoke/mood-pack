@@ -5,7 +5,7 @@ import { moodPacks } from "@/lib/moodPacks";
 import { PRICING } from "@/lib/cost";
 import type { Quality } from "@/lib/cost";
 import { UploadZone } from "@/components/UploadZone";
-import { PhotoCard, type Photo } from "@/components/PhotoCard";
+import { PhotoViewer, type Photo } from "@/components/PhotoViewer";
 
 export default function Home() {
   const [packId, setPackId] = useState<string>(moodPacks[0].id);
@@ -165,16 +165,11 @@ export default function Home() {
               </p>
             </div>
           ) : (
-            <div className="gallery">
-              {photos.map((p) => (
-                <PhotoCard
-                  key={p.id}
-                  photo={p}
-                  onStage={stagePhoto}
-                  onRemove={removePhoto}
-                />
-              ))}
-            </div>
+            <PhotoViewer
+              photos={photos}
+              onStage={stagePhoto}
+              onRemove={removePhoto}
+            />
           )}
         </section>
       </main>
