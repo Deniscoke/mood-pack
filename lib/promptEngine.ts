@@ -1,13 +1,13 @@
 // Prompt engine — poskladá prompt pre image-to-image model (fal.ai Flux Kontext).
 //
-// DÔLEŽITÉ (overené z návodu Black Forest Labs): Flux Kontext je EDITAČNÝ model
-// a fotku VIDÍ. Preto mu NEvnucujeme typ miestnosti — necháme ho, nech si sám
-// rozpozná, či je to kuchyňa/spálňa/kúpeľňa, a podľa toho ju zariadi.
-// Prompt je krátka edit-inštrukcia: akcia + zachovanie geometrie + krátky štýl.
+// Flux Kontext je EDITAČNÝ model a fotku VIDÍ. Model si typ miestnosti určí sám.
+// KĽÚČOVÉ: mood pack používame len ako ŠTÝL (farby, materiály, svetlo, nálada),
+// NIE ako zoznam nábytku — inak model pcháva gauč aj do kúpeľne. Aký nábytok
+// patrí do izby, rozhoduje typ miestnosti, nie štýl.
 
 import type { MoodPack } from "../types";
 
-// Čo má model zachovať — formulované ako "while keeping ... identical".
+// Čo má model zachovať — "while keeping ... identical".
 const PRESERVE_CLAUSE =
   "while keeping the room's walls, windows, doors, floor, ceiling, overall layout, " +
   "proportions, camera angle and perspective exactly as in the original photo. " +
@@ -17,6 +17,16 @@ const PRESERVE_CLAUSE =
 const REALISM =
   "Photorealistic real estate interior photo, realistic furniture scale, " +
   "natural lighting consistent with the existing windows. No people, no text, no watermark.";
+
+// Aký nábytok patrí do akej izby + tvrdé zákazy pre kúpeľne/chodby/kuchyne.
+const ROOM_RULES =
+  "Identify the type of room in the photo and add only furniture and decor that " +
+  "genuinely belong in that exact room. A bathroom or toilet keeps its fixtures and " +
+  "gets only towels, plants and small accessories — never a sofa or living-room " +
+  "furniture. A hallway or corridor gets only a slim console and a mirror — never a " +
+  "sofa. A kitchen keeps its units and appliances and gets only small worktop styling. " +
+  "Only living rooms, bedrooms and dining rooms get full furniture (a living room gets " +
+  "seating and a coffee table, a bedroom gets a bed, a dining room gets a table and chairs).";
 
 export interface BuildPromptInput {
   moodPack: MoodPack;
@@ -34,20 +44,23 @@ export function buildPrompt(input: BuildPromptInput): BuiltPrompt {
     input.preserveGeometry === false ? "" : PRESERVE_CLAUSE + " ";
   const note = input.userNote?.trim() ? ` ${input.userNote.trim()}.` : "";
 
-  // Akcia (model si typ izby určí sám z fotky) → štýl → zachovanie → realizmus.
+  // Mood pack ako ŠTÝL (žiadny konkrétny nábytok): nálada + materiály + svetlo.
+  const style =
+    `${input.moodPack.name} style — ${input.moodPack.atmosphere}; ` +
+    `materials: ${input.moodPack.materials.join(", ")}; ` +
+    `lighting: ${input.moodPack.lighting}`;
+
   const prompt =
-    "Furnish this empty room with realistic, well-proportioned furniture and decor " +
-    "that match the type of room shown in the photo (a bedroom gets a bed, a kitchen " +
-    "gets kitchen styling, a bathroom gets bathroom accessories, a living room gets a " +
-    "sofa, and so on). " +
-    `Style: ${input.moodPack.name} (${input.moodPack.promptFragment}). ` +
+    ROOM_RULES +
+    " " +
+    `Apply this visual style to materials, colours, lighting and mood only: ${style}. ` +
     preserve +
     REALISM +
     note;
 
-  // Pozn.: negativePrompt sa do Flux Kontext NEposiela (model ho nemá ako vstup),
-  // slúži len na dokumentáciu zámeru.
+  // Pozn.: negativePrompt sa do Flux Kontext NEposiela (model ho nemá ako vstup).
   const negativePrompt = [
+    "sofa or living-room furniture in a bathroom, toilet, hallway or kitchen",
     "changed room shape",
     "moved, extra or removed windows or doors",
     "distorted or warped furniture",
