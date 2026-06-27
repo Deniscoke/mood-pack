@@ -161,7 +161,7 @@ export default function Home() {
               <p className="muted">
                 Tu sa zobrazia tvoje fotky „pred → po".
                 <br />
-                Začni nahraním fotiek vľavo.
+                Najprv nahraj fotky bytu.
               </p>
             </div>
           ) : (
