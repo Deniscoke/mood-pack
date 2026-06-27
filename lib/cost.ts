@@ -10,6 +10,16 @@ export const PRICING: Record<Quality, { model: string; costCents: number }> = {
   final: { model: "fal-ai/flux-pro/kontext/max", costCents: 8 },
 };
 
+// Ceny pre OpenAI gpt-image-1 (ODHADY — over si na OpenAI; sú vyššie než fal).
+// quality riadi kvalitu aj cenu. input_fidelity="high" drží vstupnú fotku.
+export const OPENAI_PRICING: Record<
+  Quality,
+  { quality: "low" | "medium" | "high"; costCents: number }
+> = {
+  preview: { quality: "medium", costCents: 7 },
+  final: { quality: "high", costCents: 25 },
+};
+
 // Približná cena rozpoznania typu miestnosti (Moondream vision) na jednu fotku.
 export const DETECT_COST_CENTS = 1;
 

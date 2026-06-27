@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { imageProvider } from "@/lib/imageProvider";
+import { stage } from "@/lib/stageEngine";
 import { buildPrompt } from "@/lib/promptEngine";
 import { getMoodPack } from "@/lib/moodPacks";
 import { detectRoom } from "@/lib/roomDetect";
@@ -30,7 +31,7 @@ export async function POST(req: Request) {
     const room = await detectRoom(imageUrl);
     // 2) Podľa toho poskladáme prompt a zariadime.
     const { prompt } = buildPrompt({ moodPack, room, userNote: note });
-    const result = await imageProvider.stage({ imageUrl, prompt, quality });
+    const result = await stage({ imageUrl, prompt, quality });
 
     return NextResponse.json({
       inputUrl: imageUrl,
@@ -41,12 +42,20 @@ export async function POST(req: Request) {
     });
   } catch (err) {
     const e = err as { body?: { detail?: string }; message?: string };
-    const text = e?.body?.detail ?? e?.message ?? "";
+    const text = (e?.body?.detail ?? e?.message ?? "").toString();
     console.error("Render error:", text || err);
 
-    const friendly = /balance|locked|forbidden/i.test(text)
-      ? "Účet fal.ai nemá kredit. Dobi ho na fal.ai/dashboard/billing a skús znova."
-      : "Render zlyhal. Skús to znova o chvíľu.";
+    let friendly = "Render zlyhal. Skús to znova o chvíľu.";
+    if (/balance|exhausted|locked/i.test(text)) {
+      friendly = "Účet fal.ai nemá kredit. Dobi ho na fal.ai/dashboard/billing a skús znova.";
+    } else if (/api[ _]?key|credential|incorrect api key|unauthor|401/i.test(text)) {
+      friendly = "Chýba alebo je nesprávny OPENAI_API_KEY.";
+    } else if (/quota|insufficient/i.test(text)) {
+      friendly = "OpenAI účet nemá kredit (insufficient quota).";
+    } else if (/verif/i.test(text)) {
+      friendly =
+        "OpenAI organizácia musí byť overená, aby si mohol použiť gpt-image-1 (platform.openai.com → Settings → Organization → Verify).";
+    }
     return NextResponse.json({ error: friendly }, { status: 500 });
   }
 }

@@ -54,7 +54,10 @@ types.ts                     # spoločné TS typy
 - ✅ Next.js 16 + React 19 kostra, tokeny napojené (`styles/tokens.css` +
   `styles/base.css`), hlavná obrazovka `app/page.tsx`.
 - ✅ Image provider za rozhraním `lib/imageProvider/` (fal.ai): `stage` = Flux
-  Kontext (zariadenie), `describe` = Moondream (vízia). Ceny v `lib/cost.ts`.
+  Kontext, `describe` = Moondream (vízia), `upload` = fal storage. Ceny v `lib/cost.ts`.
+- ✅ Prepínateľný motor zariadenia `lib/stageEngine.ts`: default **OpenAI
+  gpt-image-1**, alebo fal Flux Kontext cez env `STAGE_ENGINE=fal`. Env:
+  `OPENAI_API_KEY` (pre GPT), `FAL_KEY` (upload/detekcia/hosting vždy).
 - ✅ **Automatické rozpoznanie izby** `lib/roomDetect.ts` — pred zariadením
   Moondream určí typ miestnosti (kúpeľňa/kuchyňa…), užívateľ nič nevyberá.
 - ✅ API `app/api/render`: upload → **rozpoznanie izby** → prompt → render. UI s
