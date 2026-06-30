@@ -47,11 +47,13 @@ export function PhotoViewer({
   onStage,
   onRemove,
   onSplat,
+  onViewSplat,
 }: {
   photos: Photo[];
   onStage: (photo: Photo) => void;
   onRemove: (id: string) => void;
   onSplat: (photo: Photo, source: "before" | "after") => void;
+  onViewSplat: (plyUrl: string) => void;
 }) {
   const [index, setIndex] = useState(0);
   const [view, setView] = useState<"before" | "after">("before");
@@ -191,9 +193,18 @@ export function PhotoViewer({
         </button>
 
         {splat.status === "done" && splat.plyUrl && (
-          <a className="button button--ghost" href={splat.plyUrl} download>
-            Stiahnuť PLY
-          </a>
+          <>
+            <button
+              type="button"
+              className="button button--primary"
+              onClick={() => onViewSplat(splat.plyUrl!)}
+            >
+              Zobraziť 3D
+            </button>
+            <a className="button button--ghost" href={splat.plyUrl} download>
+              Stiahnuť PLY
+            </a>
+          </>
         )}
         {splat.status === "error" && splat.error && (
           <span style={{ color: "var(--color-danger)", fontSize: "var(--font-size-sm)" }}>

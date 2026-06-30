@@ -6,12 +6,14 @@ import { PRICING } from "@/lib/cost";
 import type { Quality } from "@/lib/cost";
 import { UploadZone } from "@/components/UploadZone";
 import { PhotoViewer, type Photo, type SplatState } from "@/components/PhotoViewer";
+import { SplatViewer } from "@/components/SplatViewer";
 
 export default function Home() {
   const [packId, setPackId] = useState<string>(moodPacks[0].id);
   const [quality, setQuality] = useState<Quality>("preview");
   const [note, setNote] = useState<string>("");
   const [photos, setPhotos] = useState<Photo[]>([]);
+  const [viewerPly, setViewerPly] = useState<string | null>(null);
 
   const anyBusy = photos.some((p) => p.status === "generating");
 
@@ -198,10 +200,15 @@ export default function Home() {
               onStage={stagePhoto}
               onRemove={removePhoto}
               onSplat={makeSplat}
+              onViewSplat={setViewerPly}
             />
           )}
         </section>
       </main>
+
+      {viewerPly && (
+        <SplatViewer plyUrl={viewerPly} onClose={() => setViewerPly(null)} />
+      )}
     </>
   );
 }

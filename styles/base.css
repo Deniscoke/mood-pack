@@ -580,3 +580,39 @@ button {
   border-color: var(--color-primary);
   box-shadow: 0 0 0 1px var(--color-primary);
 }
+
+/* --- 3D náhľad (samostatné okno cez celú obrazovku) --- */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  background: rgba(8, 8, 9, 0.97);
+}
+.modal__bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+.modal__title {
+  font-weight: var(--font-weight-medium);
+}
+.modal__canvas {
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+.modal__canvas canvas {
+  display: block;
+}
+.modal__hint {
+  flex: 0 0 auto;
+  text-align: center;
+  padding: 10px;
+  font-size: 13px;
+}
