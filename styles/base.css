@@ -546,6 +546,14 @@ button {
   gap: var(--space-sm);
 }
 
+.viewer__3d {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  align-items: center;
+  justify-content: center;
+}
+
 .viewer__thumbs {
   display: flex;
   gap: 8px;

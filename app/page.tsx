@@ -5,7 +5,7 @@ import { moodPacks } from "@/lib/moodPacks";
 import { PRICING } from "@/lib/cost";
 import type { Quality } from "@/lib/cost";
 import { UploadZone } from "@/components/UploadZone";
-import { PhotoViewer, type Photo } from "@/components/PhotoViewer";
+import { PhotoViewer, type Photo, type SplatState } from "@/components/PhotoViewer";
 
 export default function Home() {
   const [packId, setPackId] = useState<string>(moodPacks[0].id);
@@ -24,6 +24,8 @@ export default function Home() {
       status: "idle",
       result: null,
       error: null,
+      splatBefore: { status: "idle", plyUrl: null, error: null },
+      splatAfter: { status: "idle", plyUrl: null, error: null },
     }));
     setPhotos((prev) => [...prev, ...additions]);
   }
@@ -65,6 +67,32 @@ export default function Home() {
       if (p.status !== "done" && p.status !== "generating") {
         await stagePhoto(p);
       }
+    }
+  }
+
+  // Generovanie 3D splatu z pôvodnej ("before") alebo zariadenej ("after") fotky.
+  async function makeSplat(photo: Photo, source: "before" | "after") {
+    const set = (s: SplatState) =>
+      updatePhoto(photo.id, source === "before" ? { splatBefore: s } : { splatAfter: s });
+
+    set({ status: "generating", plyUrl: null, error: null });
+    try {
+      const fd = new FormData();
+      if (source === "after" && photo.result) {
+        fd.append("imageUrl", photo.result.outputUrl);
+      } else {
+        fd.append("image", photo.file);
+      }
+      const res = await fetch("/api/splat", { method: "POST", body: fd });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Generovanie 3D zlyhalo.");
+      set({ status: "done", plyUrl: data.plyUrl, error: null });
+    } catch (err) {
+      set({
+        status: "error",
+        plyUrl: null,
+        error: err instanceof Error ? err.message : "Generovanie 3D zlyhalo.",
+      });
     }
   }
 
@@ -169,6 +197,7 @@ export default function Home() {
               photos={photos}
               onStage={stagePhoto}
               onRemove={removePhoto}
+              onSplat={makeSplat}
             />
           )}
         </section>

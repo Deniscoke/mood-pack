@@ -12,6 +12,13 @@ export interface RenderResult {
   room?: string; // typ miestnosti rozpoznaný AI
 }
 
+// Stav 3D splatu (zvlášť pre pôvodnú a pre zariadenú fotku).
+export interface SplatState {
+  status: PhotoStatus;
+  plyUrl: string | null;
+  error: string | null;
+}
+
 export interface Photo {
   id: string;
   file: File;
@@ -19,6 +26,8 @@ export interface Photo {
   status: PhotoStatus;
   result: RenderResult | null;
   error: string | null;
+  splatBefore: SplatState;
+  splatAfter: SplatState;
 }
 
 const ROOM_LABELS: Record<string, string> = {
@@ -37,10 +46,12 @@ export function PhotoViewer({
   photos,
   onStage,
   onRemove,
+  onSplat,
 }: {
   photos: Photo[];
   onStage: (photo: Photo) => void;
   onRemove: (id: string) => void;
+  onSplat: (photo: Photo, source: "before" | "after") => void;
 }) {
   const [index, setIndex] = useState(0);
   const [view, setView] = useState<"before" | "after">("before");
@@ -48,7 +59,6 @@ export function PhotoViewer({
   const current = Math.min(index, photos.length - 1);
   const photo = photos[current];
 
-  // Pri prepnutí fotky (alebo keď sa dorobí) nastav rozumný pohľad.
   useEffect(() => {
     setView(photo && photo.status === "done" ? "after" : "before");
   }, [photo?.id, photo?.status]);
@@ -59,6 +69,11 @@ export function PhotoViewer({
   const done = photo.status === "done" && photo.result != null;
   const showAfter = view === "after" && done;
   const imgSrc = showAfter ? photo.result!.outputUrl : photo.previewUrl;
+
+  // 3D splat sa robí z toho, čo je práve zobrazené (Pred = pôvodná, Po = zariadená).
+  const splatSource: "before" | "after" = showAfter ? "after" : "before";
+  const splat = showAfter ? photo.splatAfter : photo.splatBefore;
+  const splatting = splat.status === "generating";
 
   const go = (dir: number) =>
     setIndex((i) => {
@@ -157,6 +172,33 @@ export function PhotoViewer({
             Rozpoznané: {ROOM_LABELS[photo.result!.room ?? "other"] ?? "Iná miestnosť"} ·
             {" "}~{photo.result!.costCents} c · vizualizácia, nie záväzný návrh
           </p>
+        )}
+      </div>
+
+      {/* --- 3D splat (z aktuálneho pohľadu) --- */}
+      <div className="viewer__3d">
+        <button
+          type="button"
+          className="button button--ghost"
+          onClick={() => onSplat(photo, splatSource)}
+          disabled={splatting}
+        >
+          {splatting
+            ? "Generujem 3D…"
+            : splat.status === "done"
+            ? "Generovať 3D znova"
+            : `Generovať 3D z ${showAfter ? "zariadenej" : "pôvodnej"} (~5 c)`}
+        </button>
+
+        {splat.status === "done" && splat.plyUrl && (
+          <a className="button button--ghost" href={splat.plyUrl} download>
+            Stiahnuť PLY
+          </a>
+        )}
+        {splat.status === "error" && splat.error && (
+          <span style={{ color: "var(--color-danger)", fontSize: "var(--font-size-sm)" }}>
+            {splat.error}
+          </span>
         )}
       </div>
 
