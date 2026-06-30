@@ -67,3 +67,9 @@ Formát: dátum — rozhodnutie — prečo (vrátane "toto sme zámerne NErobili
   stene"). Zmena: zachovávame len GEOMETRIU/perspektívu (steny sa nehýbu), zrušili
   sme „nič nemeň", a poznámku **zdôrazňujeme a dávame dopredu** ("you must apply
   it"). Pozn.: jedna fotka aj „všetky" používajú rovnaký vstup — nič sa nedelí.
+- **3D splat (PLY) — TripoSplat cez fal.ai.** Vlastný GitHub repo sa NEdá spustiť
+  na Verceli (potrebuje GPU), preto ideme cez fal model `tripo3d/triposplat`
+  (náš FAL kľúč), ~0,05 $/generovanie, výstup `.ply`. Pozn.: robí OBJEKTY, nie
+  scény — z fotky izby vyjde 3D „odliatok", nie pochôdzna miestnosť. Staviame po
+  častiach: (1) backend `/api/splat` ✅, (2) tlačidlo „Generovať 3D" z Pred/Po,
+  (3) 3D náhľad v samostatnom okne (web splat viewer).
